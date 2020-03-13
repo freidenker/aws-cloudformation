@@ -1,0 +1,28 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Resources" : {
+        "AppBucket" : {
+            "Type" : "AWS::S3::Bucket",
+            "Properties": {
+                "BucketName": "winter-smr-test-vpce3"
+            }
+        },
+        "AppBucketPolicy" : {
+            "Type" : "AWS::S3::BucketPolicy",
+            "Properties" : {
+                "Bucket" : {"Ref" : "AppBucket"},
+                "PolicyDocument" : {
+                    "Statement":[{
+                        "Action":["s3:GetObject"],
+                        "Effect":"Allow",
+                        "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "AppBucket" } , "/*" ]]},
+                        "Principal":"*",
+                        "Condition":{
+                          "StringEquals":{ "aws:SourceVpce": "winter-vpce-id" }
+                        }
+                      }]                    
+                }
+              }
+          }
+    }
+ }  
